@@ -83,9 +83,9 @@ export default function Step4() {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP')
+                        format(field.value, 'MM/dd/yyyy')
                       ) : (
-                        <span>Pick a date</span>
+                        <span>mm/dd/yyyy</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -238,7 +238,7 @@ export default function Step4() {
         </div>
         
         <div className="pt-8">
-            <p className="font-serif italic border-b border-foreground pb-1">Jeffry L. Secrist</p>
+            <p className="font-serif italic border-b border-foreground pb-1 w-48">Jeffry L. Secrist</p>
             <p className="text-xs">Jeffrey L. Secrist, Chief</p>
             <p className="text-xs">Information Technology Operations Division</p>
         </div>
