@@ -2,7 +2,15 @@
 
 import { useFormContext } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const dispatchCompanies = [
+  'Beyond Trucking LLC',
+  'Truckie Dispatch Services',
+  'Prime Lanes Dispatch Services',
+  'Sqab Dispatch Services',
+  'MZ Dispatch Services',
+];
 
 export default function Step1() {
   const { control } = useFormContext();
@@ -11,39 +19,24 @@ export default function Step1() {
     <div className="space-y-6">
       <FormField
         control={control}
-        name="companyName"
+        name="dispatchCompany"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company Name</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g. Acme Trucking Co." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="dotNumber"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>DOT Number</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter your 6-8 digit DOT number" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name="carrierAddress"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Carrier Address</FormLabel>
-            <FormControl>
-              <Input placeholder="123 Main St, Anytown, USA" {...field} />
-            </FormControl>
+            <FormLabel>Dispatch Company Name:</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Dispatch Company" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {dispatchCompanies.map((company) => (
+                  <SelectItem key={company} value={company}>
+                    {company}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}

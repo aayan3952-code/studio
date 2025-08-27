@@ -19,7 +19,7 @@ import Step4 from '@/components/steps/step-4';
 import { SuccessScreen } from '@/components/success-screen';
 
 const steps = [
-  { id: 1, name: 'Carrier Information', fields: ['companyName', 'dotNumber', 'carrierAddress'] },
+  { id: 1, name: 'Step 1', fields: ['dispatchCompany'] },
   { id: 2, name: 'Shipper Information', fields: ['shipperName', 'contactPerson', 'phoneNumber'] },
   { id: 3, name: 'Service Details', fields: ['serviceType', 'cargoDescription', 'specialInstructions'] },
   { id: 4, name: 'Agreement Terms', fields: ['authorizedPersonName', 'agreedToTerms'] },
@@ -36,7 +36,8 @@ export function TruckingForm() {
     mode: 'onChange',
   });
 
-  const { handleSubmit, trigger, reset } = methods;
+  const { handleSubmit, trigger, reset, watch } = methods;
+  const selectedCompany = watch('dispatchCompany');
 
   const processForm = async () => {
     const fields = steps[currentStep].fields;
@@ -86,9 +87,14 @@ export function TruckingForm() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <StepIndicator steps={steps} currentStep={currentStep} />
+        {currentStep > 0 && <StepIndicator steps={steps} currentStep={currentStep} />}
         <CardTitle className="pt-4 font-headline text-2xl md:text-3xl">{currentStepData.name}</CardTitle>
-        <CardDescription>Please fill out the details for the service agreement.</CardDescription>
+        <CardDescription>
+          {currentStep === 0 
+            ? "The Client should only respond to verified contacts from the Company or the following trusted dispatch partners:"
+            : "Please fill out the details for the service agreement."
+          }
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <FormProvider {...methods}>
@@ -109,13 +115,23 @@ export function TruckingForm() {
             </AnimatePresence>
           </form>
         </FormProvider>
+        {currentStep === 0 && selectedCompany && (
+          <div className="mt-4 text-sm space-y-4 text-muted-foreground">
+            <p>(Hereinafter referred to as the {selectedCompany})</p>
+            <div>
+              <p className="font-bold text-foreground">Dispatch/Service Provider Representative</p>
+              <p>{selectedCompany}</p>
+              <p>Date: {new Date().toISOString().slice(0, 10)}</p>
+            </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="justify-between">
         <Button variant="outline" onClick={handleBack} disabled={currentStep === 0 || isPending}>
-          Back
+          Previous
         </Button>
         <Button onClick={processForm} disabled={isPending}>
-          {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit Agreement' : 'Next Step'}
+          {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit Agreement' : 'Next'}
         </Button>
       </CardFooter>
     </Card>
