@@ -26,10 +26,43 @@ export const serviceAgreementSchema = z.object({
   }),
 
   // Step 4: Agreement Terms
-  authorizedPersonName: z.string().min(3, 'Please enter the full name.'),
-  agreedToTerms: z.boolean().refine((val) => val === true, {
-    message: 'You must agree to the terms and conditions.',
+  signature: z.string().min(3, 'Please enter a signature.'),
+  printName: z.string().min(3, 'Please enter your full name.'),
+  date: z.date({
+    required_error: 'A date is required.',
   }),
+  email: z.string().email('Please enter a valid email address.'),
+  howYouGetPaid: z.enum(['factoring', 'ach'], {
+    required_error: 'You need to select a payment method.',
+  }),
+  bankName: z.string().optional(),
+  accountNumber: z.string().optional(),
+  routingNumber: z.string().optional(),
+}).superRefine((data, ctx) => {
+    if (data.howYouGetPaid === 'ach') {
+        if (!data.bankName) {
+            ctx.addIssue({
+                code: 'custom',
+                path: ['bankName'],
+                message: 'Bank name is required for ACH.',
+            });
+        }
+        if (!data.accountNumber) {
+            ctx.addIssue({
+                code: 'custom',
+                path: ['accountNumber'],
+                message: 'Account number is required for ACH.',
+            });
+        }
+        if (!data.routingNumber) {
+            ctx.addIssue({
+                code: 'custom',
+                path: ['routingNumber'],
+                message: 'Routing number is required for ACH.',
+            });
+        }
+    }
 });
+
 
 export type FormValues = z.infer<typeof serviceAgreementSchema>;

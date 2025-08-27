@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -21,10 +21,14 @@ const steps = [
   { id: 1, name: 'Step 1', fields: ['dispatchCompany'] },
   { id: 2, name: 'Step 2', fields: ['carrierFullName', 'companyName', 'mcNumber', 'dotNumber', 'phoneNumber', 'dedicatedLaneSetup', 'twicCardApplication', 'trailerRental', 'factoringSetup', 'insuranceAssistance'] },
   { id: 3, name: 'Step 3', fields: ['paymentMethod'] },
-  { id: 4, name: 'Agreement Terms', fields: ['authorizedPersonName', 'agreedToTerms'] },
+  { id: 4, name: 'Final Submission', fields: ['signature', 'printName', 'date', 'email', 'howYouGetPaid', 'bankName', 'accountNumber', 'routingNumber'] },
 ];
 
-export function TruckingForm() {
+type TruckingFormProps = {
+  onStepChange: (step: number) => void;
+};
+
+export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isPending, setIsPending] = useState(false);
@@ -37,6 +41,10 @@ export function TruckingForm() {
 
   const { handleSubmit, trigger, reset, watch } = methods;
   const selectedCompany = watch('dispatchCompany');
+  
+  useEffect(() => {
+    onStepChange(currentStep);
+  }, [currentStep, onStepChange]);
 
   const processForm = async () => {
     const fields = steps[currentStep].fields;
@@ -90,7 +98,7 @@ export function TruckingForm() {
         <CardDescription>
           {currentStep === 0 
             ? "The Client should only respond to verified contacts from the Company or the following trusted dispatch partners:"
-            : "Please fill out the details for the service agreement."
+            : `Please fill out the details for step ${currentStep + 1}.`
           }
         </CardDescription>
       </CardHeader>
@@ -129,7 +137,7 @@ export function TruckingForm() {
             Previous
         </Button>
         <Button onClick={processForm} disabled={isPending} className="w-full">
-          {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit Agreement' : 'Next'}
+          {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit' : 'Next'}
         </Button>
       </CardFooter>
     </Card>
