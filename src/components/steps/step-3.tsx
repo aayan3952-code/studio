@@ -1,98 +1,119 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+
+const paymentOptions = [
+  'CASHAPP',
+  'ZELLE TRANSFER',
+  'VENMO TRANSFER',
+  'BTC',
+  'Chime',
+  'PAYPAL',
+  'APPLE PAY',
+  'Wire Transfer',
+];
 
 export default function Step3() {
   const { control } = useFormContext();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Payment Terms</h3>
+        <p className="text-sm text-muted-foreground">Payment is due prior to service activation</p>
+      </div>
+
       <FormField
         control={control}
-        name="serviceType"
+        name="paymentMethod"
         render={({ field }) => (
           <FormItem className="space-y-3">
-            <FormLabel>Service Type</FormLabel>
+            <FormLabel className="font-semibold">Select Payment Option:</FormLabel>
             <FormControl>
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="flex flex-col space-y-1"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
               >
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="FTL" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    FTL (Full Truckload)
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="LTL" />
-                  </FormControl>
-                  <FormLabel className="font-normal">
-                    LTL (Less-than-Truckload)
-                  </FormLabel>
-                </FormItem>
-                <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="Drayage" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Drayage</FormLabel>
-                </FormItem>
-                 <FormItem className="flex items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <RadioGroupItem value="Intermodal" />
-                  </FormControl>
-                  <FormLabel className="font-normal">Intermodal</FormLabel>
-                </FormItem>
+                {paymentOptions.map((option) => (
+                  <FormItem key={option} className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={option} />
+                    </FormControl>
+                    <FormLabel className="font-normal">{option}</FormLabel>
+                  </FormItem>
+                ))}
               </RadioGroup>
             </FormControl>
-            <FormMessage />
           </FormItem>
         )}
       />
-       <FormField
-        control={control}
-        name="cargoDescription"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Cargo Description</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe the cargo, including weight, dimensions, and any hazardous materials."
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-       <FormField
-        control={control}
-        name="specialInstructions"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Special Instructions</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="e.g., Temperature control required, fragile items, delivery appointment needed."
-                className="resize-none"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Provide any special handling or delivery instructions.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="text-sm text-muted-foreground space-y-2">
+        <p>Payments may be processed via third-party accounts to enable same-day service</p>
+        <p>A digital receipt will be issued upon payment</p>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Refund Policy</h3>
+        <div className="text-sm text-muted-foreground space-y-2">
+            <p>The $435 dedicated lane setup fee is refundable after the Client completes their first delivery arranged by the Company</p>
+            <p>Other service fees are non-refundable once service begins, as these are time-sensitive administrative tasks.</p>
+            <p>Refunds will be issued via the original payment method within 5-7 business days, if applicable</p>
+        </div>
+      </div>
+      
+      <Separator />
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Client Responsibilities</h3>
+        <p className="text-sm text-muted-foreground">The Client agrees to:</p>
+        <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
+            <li>Provide accurate legal business and driver information</li>
+            <li>Maintain active authority (MC/DOT) and valid insurance, unless Company is assisting with setup</li>
+            <li>Communicate in a timely and professional manner</li>
+            <li>Not engage in fraud, chargebacks, or misrepresentation</li>
+        </ul>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">No Employer-Employee Relationship</h3>
+        <p className="text-sm text-muted-foreground">This Agreement does not create an employment relationship. The Client is an independent carrier and assumes all responsibility for tax, insurance, regulatory compliance, and FMCSA obligations.</p>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Authorized Communication Only</h3>
+        <p className="text-sm text-muted-foreground">If contacted by any unauthorized third party, the Client must verify with the Company before sending payments or documents.</p>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Limitation of Liability</h3>
+        <p className="text-sm text-muted-foreground">The Company is not liable for:</p>
+         <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
+            <li>Any loss of income due to delays, market rates, or missed loads</li>
+            <li>Legal or regulatory penalties due to false or missing information provided by the Client</li>
+            <li>Broker cancellations or third-party payment processing delays</li>
+        </ul>
+      </div>
+      
+      <Separator />
+
+       <div className="space-y-2">
+          <h3 className="text-lg font-medium">Dispatch/Service Provider Representative</h3>
+          <p className="text-sm">Trusted Freight LLC</p>
+          <p className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-')}</p>
+        </div>
+
     </div>
   );
 }

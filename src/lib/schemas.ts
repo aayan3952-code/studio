@@ -20,14 +20,10 @@ export const serviceAgreementSchema = z.object({
   factoringSetup: z.boolean().optional(),
   insuranceAssistance: z.boolean().optional(),
 
-  // Step 3: Service Details (from old step 3)
-  shipperName: z.string().min(2, 'Shipper name must be at least 2 characters.').optional(),
-  contactPerson: z.string().min(2, 'Contact person must be at least 2 characters.').optional(),
-  serviceType: z.enum(['FTL', 'LTL', 'Drayage', 'Intermodal'], {
-    required_error: 'You need to select a service type.',
-  }).optional(),
-  cargoDescription: z.string().min(10, 'Please provide a detailed cargo description.').optional(),
-  specialInstructions: z.string().optional(),
+  // Step 3: Payment
+  paymentMethod: z.string({
+    required_error: 'Please select a payment option.',
+  }),
 
   // Step 4: Agreement Terms
   authorizedPersonName: z.string().min(3, 'Please enter the full name.'),

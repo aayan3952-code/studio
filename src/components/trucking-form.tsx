@@ -20,7 +20,7 @@ import { SuccessScreen } from '@/components/success-screen';
 const steps = [
   { id: 1, name: 'Step 1', fields: ['dispatchCompany'] },
   { id: 2, name: 'Step 2', fields: ['carrierFullName', 'companyName', 'mcNumber', 'dotNumber', 'phoneNumber', 'dedicatedLaneSetup', 'twicCardApplication', 'trailerRental', 'factoringSetup', 'insuranceAssistance'] },
-  { id: 3, name: 'Service Details', fields: ['serviceType', 'cargoDescription', 'specialInstructions'] },
+  { id: 3, name: 'Step 3', fields: ['paymentMethod'] },
   { id: 4, name: 'Agreement Terms', fields: ['authorizedPersonName', 'agreedToTerms'] },
 ];
 
