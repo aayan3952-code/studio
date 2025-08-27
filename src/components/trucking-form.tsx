@@ -127,11 +127,9 @@ export function TruckingForm() {
         )}
       </CardContent>
       <CardFooter className="flex gap-4">
-        {currentStep > 0 && (
-          <Button variant="outline" onClick={handleBack} disabled={isPending} className="w-full">
+        <Button variant="outline" onClick={handleBack} disabled={currentStep === 0 || isPending} className="w-full">
             Previous
-          </Button>
-        )}
+        </Button>
         <Button onClick={processForm} disabled={isPending} className="w-full">
           {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit Agreement' : 'Next'}
         </Button>
