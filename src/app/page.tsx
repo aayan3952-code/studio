@@ -11,7 +11,7 @@ export default function Home() {
         </div>
         <Progress value={25} className="w-full h-2" />
         <div className="text-center text-sm text-muted-foreground">
-          <p>This Agreement is made and entered into on {new Date().toISOString().slice(0, 10)}, by and between: Trusted Freight LLC</p>
+          <p>This Agreement is made and entered into on {new Date().toLocaleDateString('en-CA')}, by and between: Trusted Freight LLC</p>
           <p>Email: winston@trustedfreightsllc.com</p>
         </div>
         <TruckingForm />

@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { StepIndicator } from '@/components/step-indicator';
 import Step1 from '@/components/steps/step-1';
 import Step2 from '@/components/steps/step-2';
 import Step3 from '@/components/steps/step-3';
@@ -87,7 +86,6 @@ export function TruckingForm() {
   return (
     <Card className="w-full">
       <CardHeader>
-        {currentStep > 0 && <StepIndicator steps={steps} currentStep={currentStep} />}
         <CardTitle className="pt-4 font-headline text-2xl md:text-3xl">{currentStepData.name}</CardTitle>
         <CardDescription>
           {currentStep === 0 
