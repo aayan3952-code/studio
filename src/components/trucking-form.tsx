@@ -126,11 +126,13 @@ export function TruckingForm() {
           </div>
         )}
       </CardContent>
-      <CardFooter className="justify-between">
-        <Button variant="outline" onClick={handleBack} disabled={currentStep === 0 || isPending}>
-          Previous
-        </Button>
-        <Button onClick={processForm} disabled={isPending}>
+      <CardFooter className="flex gap-4">
+        {currentStep > 0 && (
+          <Button variant="outline" onClick={handleBack} disabled={isPending} className="w-full">
+            Previous
+          </Button>
+        )}
+        <Button onClick={processForm} disabled={isPending} className="w-full">
           {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit Agreement' : 'Next'}
         </Button>
       </CardFooter>
