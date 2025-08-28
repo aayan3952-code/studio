@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 
 const services = [
-  { id: 'dedicatedLaneSetup', label: 'Dedicated Lane Setup $435 Refundable after first successful load delivery' },
+  { id: 'dedicatedLaneSetup', label: 'Dedicated Lane Setup $470 Refundable after first successful load delivery' },
   { id: 'twicCardApplication', label: 'TWIC Card Application $360 Same-day processing' },
   { id: 'trailerRental', label: 'Trailer Rental (3 months) $500 Subject to availability' },
   { id: 'factoringSetup', label: 'Factoring Setup $250 Same-day registration' },

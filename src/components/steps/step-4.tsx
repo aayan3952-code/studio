@@ -218,7 +218,7 @@ export default function Step4() {
         <div className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-md">
             <div>
                 <p className="text-xs text-muted-foreground">CERTIFICATE</p>
-                <p className="font-mono">MC-1115615</p>
+                <p className="font-mono">MC-966811</p>
             </div>
              <div>
                 <p className="text-xs text-muted-foreground">SERVICE DATE</p>
@@ -226,10 +226,10 @@ export default function Step4() {
             </div>
         </div>
          <div className="space-y-1">
-            <p className="text-sm">U.S. DOT No. 3437683</p>
-            <p className="text-sm">Trusted Freight LLC</p>
-            <p className="text-sm">Address: 3710 S BEAR ST UNIT F, SANTA ANA, CA, 92704</p>
-            <p className="text-sm">ORLANDO, FL 32825</p>
+            <p className="text-sm">U.S. DOT No. 2881025</p>
+            <p className="text-sm">Dedicated Global Carrier LLC</p>
+            <p className="text-sm">Address: 801 WEST BAY DRIVE, STE 106</p>
+            <p className="text-sm">LARGO, FL 33770</p>
         </div>
 
         <div className="text-xs text-muted-foreground space-y-2">
@@ -250,7 +250,7 @@ export default function Step4() {
 
         <div>
           <h4 className="font-bold text-sm">Dispatch/Service Provider Representative</h4>
-          <p className="text-sm">Trusted Freight LLC</p>
+          <p className="text-sm">Dedicated Global Carrier LLC</p>
           <p className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString('en-CA')}</p>
         </div>
       </div>

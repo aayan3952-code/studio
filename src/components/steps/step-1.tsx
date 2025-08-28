@@ -10,6 +10,7 @@ const dispatchCompanies = [
   'Prime Lanes Dispatch Services',
   'Sqab Dispatch Services',
   'MZ Dispatch Services',
+  'North Star Shipping LLC',
 ];
 
 export default function Step1() {
