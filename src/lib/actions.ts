@@ -5,6 +5,7 @@ import { firestore } from './firebase';
 import { serviceAgreementSchema, type FormValues } from './schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
+import { generateEmails } from '@/ai/flows/generate-email-flow';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -23,6 +24,27 @@ export async function saveAgreement(data: FormValues) {
         status: 'Submitted',
         submittedAt: serverTimestamp(),
     });
+    
+    // Generate email content after saving
+    try {
+        const emailContent = await generateEmails({
+            formData: parsedData.data,
+            trackingId: docRef.id,
+        });
+        console.log("------- Admin Email HTML -------");
+        console.log(emailContent.adminEmail);
+        console.log("---------------------------------");
+        
+        console.log("------- User Email HTML --------");
+        console.log(emailContent.userEmail);
+        console.log("--------------------------------");
+
+    } catch (emailError) {
+        console.error("Error generating email content: ", emailError);
+        // We don't want to block the user if email generation fails
+    }
+
+
     return { success: true, docId: docRef.id };
   } catch (error) {
     console.error("Error saving to Firestore: ", error);
@@ -65,7 +87,7 @@ export async function getAllAgreements() {
         ...data,
         id: doc.id,
         date: data.date.toDate().toISOString(),
-        submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : null,
+        submittedAt: data.submittedAt ? data.submittedAt.toISOString() : null,
       }
     });
     return { success: true, data: agreements };
