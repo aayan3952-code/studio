@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getAgreement } from '@/lib/actions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Search, Truck, Clock } from 'lucide-react';
+import { Search, Truck, Clock, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 type AgreementData = {
@@ -26,17 +27,17 @@ export default function TrackPage() {
   const [agreement, setAgreement] = useState<AgreementData | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!trackingId) {
+  const handleSearch = async (idToSearch: string) => {
+    if (!idToSearch) {
       setError('Please enter a tracking ID.');
       return;
     }
     setIsLoading(true);
     setError('');
     setAgreement(null);
-    const result = await getAgreement(trackingId);
+    const result = await getAgreement(idToSearch);
     if (result.success && result.data) {
       setAgreement(result.data as AgreementData);
     } else {
@@ -45,6 +46,19 @@ export default function TrackPage() {
     setIsLoading(false);
   };
   
+  useEffect(() => {
+    const idFromUrl = searchParams.get('id');
+    if (idFromUrl) {
+      setTrackingId(idFromUrl);
+      handleSearch(idFromUrl);
+    }
+  }, [searchParams]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSearch(trackingId);
+  }
+
   const getStatusVariant = (status: string) => {
     switch (status.toLowerCase()) {
       case 'submitted':
@@ -71,7 +85,7 @@ export default function TrackPage() {
 
         <Card className="shadow-lg">
           <CardContent className="p-6">
-            <form onSubmit={handleSearch} className="flex items-center gap-4">
+            <form onSubmit={handleSubmit} className="flex items-center gap-4">
               <Input
                 value={trackingId}
                 onChange={(e) => setTrackingId(e.target.value)}
@@ -79,11 +93,19 @@ export default function TrackPage() {
                 className="h-12 text-base"
               />
               <Button type="submit" size="lg" disabled={isLoading} className="h-12">
-                {isLoading ? 'Searching...' : <Search className="h-5 w-5" />}
+                {isLoading ? <Loader2 className="animate-spin" /> : <Search className="h-5 w-5" />}
+                 <span className="sr-only">Search</span>
               </Button>
             </form>
           </CardContent>
         </Card>
+
+        {isLoading && !agreement && (
+            <div className="flex justify-center items-center mt-6">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="ml-4 text-muted-foreground">Searching for your agreement...</p>
+            </div>
+        )}
 
         {error && (
           <Alert variant="destructive" className="mt-6">
