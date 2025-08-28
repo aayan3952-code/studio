@@ -140,7 +140,7 @@ export default function Step2() {
 
        <div className="space-y-2">
           <h3 className="text-lg font-medium">Dispatch/Service Provider Representative</h3>
-          <p className="text-sm">Trusted Freight LLC</p>
+          <p className="text-sm">Dedicated Global Carrier LLC</p>
           <p className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString('en-CA')}</p>
         </div>
 
