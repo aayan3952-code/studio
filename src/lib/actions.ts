@@ -1,6 +1,6 @@
 'use server';
 
-import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
 import { firestore } from './firebase';
 import { serviceAgreementSchema, type FormValues } from './schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -85,6 +85,18 @@ export async function updateAgreementStatus(id: string, status: string) {
     return { success: false, error: 'Failed to update status.' };
   }
 }
+
+export async function deleteAgreement(id: string) {
+  try {
+    const docRef = doc(firestore, 'serviceAgreements', id);
+    await deleteDoc(docRef);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting agreement: ", error);
+    return { success: false, error: 'Failed to delete agreement.' };
+  }
+}
+
 
 export async function signIn(formData: FormData) {
   const email = formData.get('email') as string;
