@@ -2,22 +2,31 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 type SuccessScreenProps = {
   onReset: () => void;
   trackingId: string;
+  userEmail: string;
+  userName: string;
 };
 
-export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
+export function SuccessScreen({ onReset, trackingId, userEmail, userName }: SuccessScreenProps) {
   const trackingUrl = `/track?id=${trackingId}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(trackingId);
     // Optional: show a toast notification
   };
+
+  const mailtoHref = `mailto:${userEmail}?subject=${encodeURIComponent(
+    `Your Service Agreement Submission (ID: ${trackingId})`
+  )}&body=${encodeURIComponent(
+    `Hello ${userName},\n\nThank you for your submission.\n\nYour tracking ID is: ${trackingId}\n\nYou can track the status of your agreement here: ${window.location.origin}${trackingUrl}\n\nBest regards,\nTrusted Freight LLC`
+  )}`;
+
 
   return (
     <Card className="w-full max-w-2xl mx-auto animate-in fade-in-50 duration-500">
@@ -37,7 +46,7 @@ export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
             <Button variant="outline" size="sm" onClick={copyToClipboard}>Copy</Button>
         </div>
         <p className="text-muted-foreground mt-4">
-          You can track the status of your agreement using this ID.
+          You can track the status of your agreement using this ID. A confirmation email draft has been prepared for you.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
@@ -48,6 +57,13 @@ export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
               <Link href={trackingUrl}>
                 Track Your Submission <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
+            </Button>
+        </div>
+         <div className="mt-6 border-t pt-6">
+            <Button asChild>
+                <a href={mailtoHref}>
+                    <Mail className="mr-2 h-4 w-4" /> Send Confirmation Email
+                </a>
             </Button>
         </div>
       </CardContent>

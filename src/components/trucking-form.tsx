@@ -54,8 +54,7 @@ const initialValues: FormValues = {
 
 export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [trackingId, setTrackingId] = useState('');
+  const [submissionData, setSubmissionData] = useState<{trackingId: string, userEmail: string, userName: string} | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { toast } = useToast();
 
@@ -73,31 +72,36 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
     onStepChange(currentStep);
   }, [currentStep, onStepChange]);
 
-  const processForm = async () => {
+  const processForm = async (data: FormValues) => {
+    setIsPending(true);
+    const result = await saveAgreement(data);
+    setIsPending(false);
+
+    if (result.success && result.docId) {
+      setSubmissionData({
+        trackingId: result.docId,
+        userEmail: data.email,
+        userName: data.carrierFullName,
+      });
+    } else {
+      toast({
+        title: 'Submission Failed',
+        description: result.error,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleNext = async () => {
     const fields = steps[currentStep].fields;
-    const output = await trigger(fields as (keyof FormValues)[] | undefined, { shouldFocus: true });
+    const output = await trigger(fields as (keyof FormValues)[], { shouldFocus: true });
 
     if (!output) return;
 
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      await handleSubmit(async (data) => {
-        setIsPending(true);
-        const result = await saveAgreement(data);
-        setIsPending(false);
-
-        if (result.success && result.docId) {
-          setTrackingId(result.docId);
-          setIsSubmitted(true);
-        } else {
-          toast({
-            title: 'Submission Failed',
-            description: result.error,
-            variant: 'destructive',
-          });
-        }
-      })();
+      await handleSubmit(processForm)();
     }
   };
 
@@ -110,12 +114,16 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const handleReset = () => {
     reset(initialValues);
     setCurrentStep(0);
-    setIsSubmitted(false);
-    setTrackingId('');
+    setSubmissionData(null);
   };
 
-  if (isSubmitted) {
-    return <SuccessScreen onReset={handleReset} trackingId={trackingId} />;
+  if (submissionData) {
+    return <SuccessScreen 
+      onReset={handleReset} 
+      trackingId={submissionData.trackingId}
+      userEmail={submissionData.userEmail}
+      userName={submissionData.userName}
+    />;
   }
 
   return (
@@ -163,7 +171,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
         <Button variant="outline" onClick={handleBack} disabled={currentStep === 0 || isPending} className="w-full">
             Previous
         </Button>
-        <Button onClick={processForm} disabled={isPending} className="w-full">
+        <Button onClick={handleNext} disabled={isPending} className="w-full">
           {isPending ? 'Submitting...' : currentStep === steps.length - 1 ? 'Submit' : 'Next'}
         </Button>
       </CardFooter>
