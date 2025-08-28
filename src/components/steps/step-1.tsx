@@ -5,12 +5,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const dispatchCompanies = [
-  'Beyond Trucking LLC',
-  'Truckie Dispatch Services',
-  'Prime Lanes Dispatch Services',
-  'Sqab Dispatch Services',
-  'MZ Dispatch Services',
-  'North Star Shipping LLC',
+ 'North Star Shipping LLC',
 ];
 
 export default function Step1() {
