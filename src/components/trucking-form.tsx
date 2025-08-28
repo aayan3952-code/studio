@@ -67,6 +67,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
 
   const { handleSubmit, trigger, reset, watch } = methods;
   const selectedCompany = watch('dispatchCompany');
+  const currentStepData = useMemo(() => steps[currentStep], [currentStep]);
   
   useEffect(() => {
     onStepChange(currentStep);
@@ -116,8 +117,6 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
   if (isSubmitted) {
     return <SuccessScreen onReset={handleReset} trackingId={trackingId} />;
   }
-  
-  const currentStepData = useMemo(() => steps[currentStep], [currentStep]);
 
   return (
     <Card className="w-full">
