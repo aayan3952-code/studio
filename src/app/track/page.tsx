@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getAgreement } from '@/lib/actions';
 import { Input } from '@/components/ui/input';
@@ -22,7 +22,7 @@ type AgreementData = {
   [key: string]: any;
 };
 
-export default function TrackPage() {
+function TrackingComponent() {
   const [trackingId, setTrackingId] = useState('');
   const [agreement, setAgreement] = useState<AgreementData | null>(null);
   const [error, setError] = useState('');
@@ -52,6 +52,7 @@ export default function TrackPage() {
       setTrackingId(idFromUrl);
       handleSearch(idFromUrl);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +61,7 @@ export default function TrackPage() {
   }
 
   const getStatusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'submitted':
         return 'default';
       case 'in progress':
@@ -73,10 +74,8 @@ export default function TrackPage() {
         return 'outline';
     }
   };
-
   return (
-    <main className="flex min-h-screen w-full flex-col items-center bg-gray-50 dark:bg-gray-900 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <Truck className="mx-auto h-12 w-12 text-primary" />
           <h1 className="text-4xl font-headline font-bold text-foreground mt-4">Track Your Agreement</h1>
@@ -156,6 +155,16 @@ export default function TrackPage() {
           </Card>
         )}
       </div>
+  )
+}
+
+
+export default function TrackPage() {
+  return (
+    <main className="flex min-h-screen w-full flex-col items-center bg-gray-50 dark:bg-gray-900 px-4 py-12 sm:px-6 lg:px-8">
+       <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin text-primary" />}>
+        <TrackingComponent />
+      </Suspense>
     </main>
   );
 }
