@@ -6,13 +6,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 
 const paymentOptions = [
-  'CASHAPP',
   'ZELLE TRANSFER',
-  'VENMO TRANSFER',
-  'BTC',
-  'Chime',
   'PAYPAL',
-  'APPLE PAY',
   'Wire Transfer',
 ];
 
