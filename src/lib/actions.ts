@@ -6,6 +6,9 @@ import { serviceAgreementSchema, type FormValues } from './schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
 import { generateEmails } from '@/ai/flows/generate-email-flow';
+import { sendEmail } from './mail';
+
+const ADMIN_EMAIL = 't4tech2011@gmail.com';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -25,25 +28,33 @@ export async function saveAgreement(data: FormValues) {
         submittedAt: serverTimestamp(),
     });
     
-    // Generate email content after saving
+    // Generate and send emails
     try {
-        const emailContent = await generateEmails({
-            formData: parsedData.data,
-            trackingId: docRef.id,
-        });
-        console.log("------- Admin Email HTML -------");
-        console.log(emailContent.adminEmail);
-        console.log("---------------------------------");
-        
-        console.log("------- User Email HTML --------");
-        console.log(emailContent.userEmail);
-        console.log("--------------------------------");
+      const emailContent = await generateEmails({
+        formData: parsedData.data,
+        trackingId: docRef.id,
+      });
+
+      // Send to Admin
+      await sendEmail({
+        to: ADMIN_EMAIL,
+        subject: `New Service Agreement: ${parsedData.data.carrierFullName} - ${docRef.id}`,
+        html: emailContent.adminEmail,
+      });
+
+      // Send to User
+      await sendEmail({
+        to: parsedData.data.email,
+        subject: `Service Agreement Submitted - Tracking ID: ${doc_id}`,
+        html: emailContent.userEmail,
+      });
 
     } catch (emailError) {
-        console.error("Error generating email content: ", emailError);
-        // We don't want to block the user if email generation fails
+        console.error("Error sending emails: ", emailError);
+        // We don't want to block the user if email sending fails
+        // but we can let them know something went wrong.
+        // You could add a non-critical error message to the return object here.
     }
-
 
     return { success: true, docId: docRef.id };
   } catch (error) {
@@ -87,7 +98,7 @@ export async function getAllAgreements() {
         ...data,
         id: doc.id,
         date: data.date.toDate().toISOString(),
-        submittedAt: data.submittedAt ? data.submittedAt.toISOString() : null,
+        submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : null,
       }
     });
     return { success: true, data: agreements };
