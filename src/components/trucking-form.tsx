@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -28,6 +29,29 @@ type TruckingFormProps = {
   onStepChange: (step: number) => void;
 };
 
+const initialValues: FormValues = {
+  dispatchCompany: '',
+  carrierFullName: '',
+  companyName: '',
+  mcNumber: '',
+  dotNumber: '',
+  phoneNumber: '',
+  dedicatedLaneSetup: false,
+  twicCardApplication: false,
+  trailerRental: false,
+  factoringSetup: false,
+  insuranceAssistance: false,
+  paymentMethod: '',
+  signature: '',
+  printName: '',
+  date: new Date(),
+  email: '',
+  howYouGetPaid: 'factoring',
+  bankName: '',
+  accountNumber: '',
+  routingNumber: '',
+};
+
 export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -38,6 +62,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const methods = useForm<FormValues>({
     resolver: zodResolver(serviceAgreementSchema),
     mode: 'onChange',
+    defaultValues: initialValues,
   });
 
   const { handleSubmit, trigger, reset, watch } = methods;
@@ -49,7 +74,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
 
   const processForm = async () => {
     const fields = steps[currentStep].fields;
-    const output = await trigger(fields as (keyof FormValues)[], { shouldFocus: true });
+    const output = await trigger(fields as (keyof FormValues)[] | undefined, { shouldFocus: true });
 
     if (!output) return;
 
@@ -82,7 +107,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
   };
   
   const handleReset = () => {
-    reset();
+    reset(initialValues);
     setCurrentStep(0);
     setIsSubmitted(false);
     setTrackingId('');

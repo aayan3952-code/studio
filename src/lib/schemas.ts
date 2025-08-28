@@ -4,7 +4,7 @@ export const serviceAgreementSchema = z.object({
   // Step 1: Carrier Information
   dispatchCompany: z.string({
     required_error: 'Please select a dispatch company.',
-  }),
+  }).min(1, 'Please select a dispatch company.'),
 
   // Step 2: Carrier Information
   carrierFullName: z.string().min(2, 'Please enter a valid name.'),
@@ -14,16 +14,16 @@ export const serviceAgreementSchema = z.object({
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Enter a valid phone number.'),
   
   // Services with Fees
-  dedicatedLaneSetup: z.boolean().optional(),
-  twicCardApplication: z.boolean().optional(),
-  trailerRental: z.boolean().optional(),
-  factoringSetup: z.boolean().optional(),
-  insuranceAssistance: z.boolean().optional(),
+  dedicatedLaneSetup: z.boolean().default(false).optional(),
+  twicCardApplication: z.boolean().default(false).optional(),
+  trailerRental: z.boolean().default(false).optional(),
+  factoringSetup: z.boolean().default(false).optional(),
+  insuranceAssistance: z.boolean().default(false).optional(),
 
   // Step 3: Payment
   paymentMethod: z.string({
     required_error: 'Please select a payment option.',
-  }),
+  }).min(1, 'Please select a payment option.'),
 
   // Step 4: Agreement Terms
   signature: z.string().min(3, 'Please enter a signature.'),
