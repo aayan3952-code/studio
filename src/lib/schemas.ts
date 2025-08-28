@@ -67,16 +67,3 @@ export const serviceAgreementSchema = z.object({
 
 
 export type FormValues = z.infer<typeof serviceAgreementSchema>;
-
-// Schema for Genkit email generation flow
-export const GenerateEmailsInputSchema = z.object({
-  formData: serviceAgreementSchema,
-  trackingId: z.string().describe('The unique tracking ID for the submission.'),
-});
-export type GenerateEmailsInput = z.infer<typeof GenerateEmailsInputSchema>;
-
-export const GenerateEmailsOutputSchema = z.object({
-  adminEmail: z.string().describe('The HTML content of the email for the admin.'),
-  userEmail: z.string().describe('The HTML content of the email for the user.'),
-});
-export type GenerateEmailsOutput = z.infer<typeof GenerateEmailsOutputSchema>;

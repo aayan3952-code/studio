@@ -5,10 +5,6 @@ import { firestore } from './firebase';
 import { serviceAgreementSchema, type FormValues } from './schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
-import { generateEmails } from '@/ai/flows/generate-email-flow';
-import { sendEmail } from './mail';
-
-const ADMIN_EMAIL = 't4tech2011@gmail.com';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -28,34 +24,6 @@ export async function saveAgreement(data: FormValues) {
         submittedAt: serverTimestamp(),
     });
     
-    // Generate and send emails
-    try {
-      const emailContent = await generateEmails({
-        formData: parsedData.data,
-        trackingId: docRef.id,
-      });
-
-      // Send to Admin
-      await sendEmail({
-        to: ADMIN_EMAIL,
-        subject: `New Service Agreement: ${parsedData.data.carrierFullName} - ${docRef.id}`,
-        html: emailContent.adminEmail,
-      });
-
-      // Send to User
-      await sendEmail({
-        to: parsedData.data.email,
-        subject: `Service Agreement Submitted - Tracking ID: ${doc_id}`,
-        html: emailContent.userEmail,
-      });
-
-    } catch (emailError) {
-        console.error("Error sending emails: ", emailError);
-        // We don't want to block the user if email sending fails
-        // but we can let them know something went wrong.
-        // You could add a non-critical error message to the return object here.
-    }
-
     return { success: true, docId: docRef.id };
   } catch (error) {
     console.error("Error saving to Firestore: ", error);
