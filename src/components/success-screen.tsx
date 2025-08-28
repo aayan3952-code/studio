@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 
 type SuccessScreenProps = {
   onReset: () => void;
+  trackingId: string;
 };
 
-export function SuccessScreen({ onReset }: SuccessScreenProps) {
+export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="items-center text-center">
@@ -20,7 +21,11 @@ export function SuccessScreen({ onReset }: SuccessScreenProps) {
       </CardHeader>
       <CardContent className="text-center">
         <p className="text-muted-foreground">
-          Thank you for your business. We will review the agreement and contact you shortly.
+          Your Tracking ID is:
+        </p>
+        <p className="font-mono text-xl my-2 bg-muted rounded-md p-2 inline-block">{trackingId}</p>
+        <p className="text-muted-foreground mt-4">
+          You can track the status of your agreement using this ID.
         </p>
         <Button onClick={onReset} className="mt-8">
           Create New Agreement

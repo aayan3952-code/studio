@@ -31,6 +31,7 @@ type TruckingFormProps = {
 export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [trackingId, setTrackingId] = useState('');
   const [isPending, setIsPending] = useState(false);
   const { toast } = useToast();
 
@@ -60,7 +61,8 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
         const result = await saveAgreement(data);
         setIsPending(false);
 
-        if (result.success) {
+        if (result.success && result.docId) {
+          setTrackingId(result.docId);
           setIsSubmitted(true);
         } else {
           toast({
@@ -83,10 +85,11 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
     reset();
     setCurrentStep(0);
     setIsSubmitted(false);
+    setTrackingId('');
   };
 
   if (isSubmitted) {
-    return <SuccessScreen onReset={handleReset} />;
+    return <SuccessScreen onReset={handleReset} trackingId={trackingId} />;
   }
   
   const currentStepData = useMemo(() => steps[currentStep], [currentStep]);

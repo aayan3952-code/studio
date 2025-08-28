@@ -18,6 +18,7 @@ export async function saveAgreement(data: FormValues) {
   try {
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), {
         ...parsedData.data,
+        status: 'Submitted',
         submittedAt: serverTimestamp(),
     });
     return { success: true, docId: docRef.id };
