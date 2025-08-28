@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, LogOut, Shield, Users, FileText, BarChart2 } from 'lucide-react';
+import { MoreHorizontal, LogOut, Shield, Users, FileText, BarChart2, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 type Agreement = {

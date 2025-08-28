@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Search, Truck, Clock, CheckCircle } from 'lucide-react';
+import { Search, Truck, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 type AgreementData = {
@@ -131,7 +131,7 @@ export default function TrackPage() {
                     <Link href="/">Submit another agreement</Link>
                 </Button>
             </CardFooter>
-          </Card>>
+          </Card>
         )}
       </div>
     </main>
