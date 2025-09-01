@@ -8,9 +8,9 @@ import { Separator } from '@/components/ui/separator';
 
 const services = [
   { id: 'dedicatedLaneSetup', label: 'Dedicated Lane Setup $470 Refundable after first successful load delivery' },
-  { id: 'twicCardApplication', label: 'TWIC Card Application $360 Same-day processing' },
+  { id: 'twicCardApplication', label: 'TWIC Card Application $445 Same-day processing' },
   { id: 'trailerRental', label: 'Trailer Rental (3 months) $500 Subject to availability' },
-  { id: 'factoringSetup', label: 'Factoring Setup $250 Same-day registration' },
+  { id: 'factoringSetup', label: 'Factoring Setup $420 Same-day registration' },
   { id: 'insuranceAssistance', label: 'Insurance Assistance $399 Fast-track insurance quote & setup' },
 ];
 
