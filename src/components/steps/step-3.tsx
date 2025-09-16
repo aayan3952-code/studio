@@ -56,7 +56,7 @@ export default function Step3() {
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Refund Policy</h3>
         <div className="text-sm text-muted-foreground space-y-2">
-            <p>The $470 dedicated lane setup fee is refundable after the Client completes their first delivery arranged by the Company</p>
+            <p>The $479 dedicated lane setup fee is refundable after the Client completes their first delivery arranged by the Company</p>
             <p>Other service fees are non-refundable once service begins, as these are time-sensitive administrative tasks.</p>
             <p>Refunds will be issued via the original payment method within 5-7 business days, if applicable</p>
         </div>
