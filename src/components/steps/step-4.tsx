@@ -226,10 +226,10 @@ export default function Step4() {
             </div>
         </div>
          <div className="space-y-1">
-            <p className="text-sm">U.S. DOT No. 2881025</p>
-            <p className="text-sm">Dedicated Global Carrier LLC</p>
-            <p className="text-sm">Address: 801 WEST BAY DRIVE, STE 106</p>
-            <p className="text-sm">LARGO, FL 33770</p>
+            <p className="text-sm">DOT-2233564 </p>
+            <p className="text-sm">ECHO GLOBAL LOGISTICS INC </p>
+            <p className="text-sm">Address: MC-511639 600 WEST CHICAGO AVENUE, SUITE 830 </p>
+            <p className="text-sm">CHICAGO, IL 60610</p>
         </div>
 
         <div className="text-xs text-muted-foreground space-y-2">
@@ -250,7 +250,7 @@ export default function Step4() {
 
         <div>
           <h4 className="font-bold text-sm">Dispatch/Service Provider Representative</h4>
-          <p className="text-sm">Dedicated Global Carrier LLC</p>
+          <p className="text-sm">ECHO GLOBAL LOGISTICS INC </p>
           <p className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString('en-CA')}</p>
         </div>
       </div>
