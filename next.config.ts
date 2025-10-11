@@ -24,6 +24,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@react-email/render', 'nodemailer'],
+  },
 };
 
 export default nextConfig;

@@ -5,6 +5,8 @@ import { firestore } from './firebase';
 import { serviceAgreementSchema, type FormValues } from './schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase';
+import { sendContractEmail } from './email';
+import { generateContractPdf } from './pdf';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -18,11 +20,32 @@ export async function saveAgreement(data: FormValues) {
   }
 
   try {
-    const docRef = await addDoc(collection(firestore, 'serviceAgreements'), {
+    const agreementData = {
         ...parsedData.data,
         status: 'Submitted',
         submittedAt: serverTimestamp(),
-    });
+    };
+    
+    const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
+
+    // After saving, generate PDF and send email
+    try {
+        const fullAgreementData = {
+            ...agreementData,
+            id: docRef.id,
+            date: agreementData.date.toISOString(),
+            submittedAt: new Date().toISOString(), // Use current date as timestamp is on server
+        }
+        
+        const pdfBuffer = await generateContractPdf(fullAgreementData);
+        
+        await sendContractEmail(fullAgreementData, pdfBuffer);
+
+    } catch (emailOrPdfError) {
+        console.error("Error generating PDF or sending email: ", emailOrPdfError);
+        // Don't block the user response for this, just log the error.
+        // In a real-world scenario, you might add this to a retry queue.
+    }
     
     return { success: true, docId: docRef.id };
   } catch (error) {
