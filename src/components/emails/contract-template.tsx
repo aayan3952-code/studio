@@ -112,7 +112,7 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
                         <ul>
                             {services.map(s => <li key={s.label}>{s.label.split(' $')[0]}</li>)}
                         </ul>
-                    ) : ' None'}
+                    ) : 'None'}
                 </div>
                 <div style={detailItemStyle}><span style={detailLabelStyle}>Payment Method for Services:</span> {agreement.paymentMethod}</div>
             </div>
