@@ -86,7 +86,7 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
     } else {
       toast({
         title: 'Submission Failed',
-        description: result.error,
+        description: typeof result.error === 'string' ? result.error : 'An unknown error occurred.',
         variant: 'destructive',
       });
     }
