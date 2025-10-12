@@ -17,8 +17,8 @@ export default function Home() {
         </div>
         <Progress value={progress} className="w-full h-2" />
         <div className="text-center text-sm text-muted-foreground">
-          <p>This Agreement is made and entered into on {new Date().toLocaleDateString('en-CA')}, by and between: Dedicated Global Carrier LLC</p>
-          <p>Email: winston@dedicatedglobalcarrierllc.com</p>
+          <p>This Agreement is made and entered into on {new Date().toLocaleDateString('en-CA')}, by and between: Echo Logistics Inc</p>
+          <p>Email: frank@echologistics-inc.com</p>
         </div>
         <TruckingForm onStepChange={(step) => setProgress((step + 1) * 25)} />
       </div>
