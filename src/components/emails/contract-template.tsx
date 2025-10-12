@@ -22,11 +22,6 @@ const headerStyle: React.CSSProperties = {
   marginBottom: '20px',
 };
 
-const logoStyle: React.CSSProperties = {
-  maxWidth: '150px',
-  marginBottom: '10px',
-};
-
 const sectionStyle: React.CSSProperties = {
   marginBottom: '20px',
 };
@@ -68,14 +63,11 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
         { label: 'Insurance Assistance', value: agreement.insuranceAssistance },
     ].filter(service => service.value);
 
-    // This URL should point to the publicly accessible logo.
-    // If your app is at `https://myapp.com`, this will resolve to `https://myapp.com/logo.png`
-    const logoUrl = '/logo.png';
-
     return (
         <div style={containerStyle}>
             <div style={headerStyle}>
-                <img src={logoUrl} alt="Company Logo" style={logoStyle} />
+                {/* To add a logo here, you must use an absolute URL to a publicly hosted image. */}
+                {/* Example: <img src="https://your-app-domain.com/logo.png" alt="Company Logo" /> */}
                 <h1>Trucking Service Agreement</h1>
                 <p>Confirmation & Record</p>
             </div>
