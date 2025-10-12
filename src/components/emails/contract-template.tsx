@@ -132,7 +132,7 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
             <div style={sectionStyle}>
                 <h2 style={sectionTitleStyle}>Signature</h2>
                 <div style={detailItemStyle}><span style={detailLabelStyle}>Signed By:</span> {agreement.signature}</div>
-                <div style={detailItemStyle}><span style-={detailLabelStyle}>Printed Name:</span> {agreement.printName}</div>
+                <div style={detailItemStyle}><span style={detailLabelStyle}>Printed Name:</span> {agreement.printName}</div>
                 <div style={detailItemStyle}><span style={detailLabelStyle}>Date Signed:</span> {new Date(agreement.date).toLocaleDateString()}</div>
             </div>
 
