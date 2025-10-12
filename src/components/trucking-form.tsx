@@ -84,9 +84,16 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
         userName: data.carrierFullName,
       });
     } else {
+      let errorMessage = 'An unknown error occurred.';
+      if (typeof result.error === 'string') {
+        errorMessage = result.error;
+      } else if (result.error) {
+        errorMessage = JSON.stringify(result.error, null, 2);
+      }
+      
       toast({
         title: 'Submission Failed',
-        description: typeof result.error === 'string' ? result.error : 'An unknown error occurred.',
+        description: errorMessage,
         variant: 'destructive',
       });
     }
