@@ -13,9 +13,9 @@ export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
 
   if (!parsedData.success) {
-    let errorMessages = '';
+    let errorMessages = 'Validation failed: ';
     parsedData.error.issues.forEach((issue) => {
-      errorMessages = errorMessages + issue.path[0] + ': ' + issue.message + '. ';
+      errorMessages += `${issue.path.join('.')}: ${issue.message}. `;
     });
     return { success: false, error: errorMessages };
   }
@@ -43,8 +43,9 @@ export async function saveAgreement(data: FormValues) {
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement processing: ", error);
-    // Return a specific error message to the user for better debugging.
-    return { success: false, error: `Failed to process agreement: ${error.message}` };
+    // Ensure the returned error is always a string.
+    const errorMessage = error.message || String(error);
+    return { success: false, error: `Failed to process agreement: ${errorMessage}` };
   }
 }
 
