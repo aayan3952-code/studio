@@ -27,34 +27,24 @@ export async function saveAgreement(data: FormValues) {
         submittedAt: serverTimestamp(),
     };
     
-    // Firestore expects a raw Date object for timestamp conversion
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
 
-    // After saving, generate PDF and send email
-    try {
-        const fullAgreementData = {
-            ...agreementData,
-            id: docRef.id,
-            // Convert date objects to ISO strings for PDF/Email logic
-            date: agreementData.date.toISOString(),
-            submittedAt: new Date().toISOString(), // Use current date as server timestamp is not available client-side
-            status: 'Submitted'
-        };
-        
-        const pdfBuffer = await generateContractPdf(fullAgreementData);
-        
-        await sendContractEmail(fullAgreementData, pdfBuffer);
-
-    } catch (emailOrPdfError) {
-        console.error("Error generating PDF or sending email: ", emailOrPdfError);
-        // Don't block the user response for this, just log the error.
-        // We can still return success to the user as the primary action (saving) was successful.
-    }
+    const fullAgreementDataForEmail = {
+        ...agreementData,
+        id: docRef.id,
+        date: agreementData.date.toISOString(),
+        submittedAt: new Date().toISOString(),
+        status: 'Submitted'
+    };
+    
+    const pdfBuffer = await generateContractPdf(fullAgreementDataForEmail);
+    await sendContractEmail(fullAgreementDataForEmail, pdfBuffer);
     
     return { success: true, docId: docRef.id };
-  } catch (error) {
-    console.error("Error saving to Firestore: ", error);
-    return { success: false, error: 'Failed to save agreement. Please try again.' };
+  } catch (error: any) {
+    console.error("Error during agreement processing: ", error);
+    // Return a specific error message to the user for better debugging.
+    return { success: false, error: `Failed to process agreement: ${error.message}` };
   }
 }
 
