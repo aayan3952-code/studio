@@ -43,8 +43,8 @@ export async function saveAgreement(data: FormValues) {
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement processing: ", error);
-    // Ensure the returned error is always a string.
-    const errorMessage = error.message || String(error);
+    // Ensure the returned error is always a string, no matter what is caught.
+    const errorMessage = String(error.message || error);
     return { success: false, error: `Failed to process agreement: ${errorMessage}` };
   }
 }
