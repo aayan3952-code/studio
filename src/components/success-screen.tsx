@@ -44,7 +44,7 @@ export function SuccessScreen({ onReset, trackingId, userEmail, userName }: Succ
             <Button variant="outline" size="sm" onClick={copyToClipboard}>Copy</Button>
         </div>
         <p className="text-muted-foreground mt-4">
-          A confirmation email with the agreement details and a PDF copy has been sent to <span className="font-medium text-foreground">{userEmail}</span>.
+          A confirmation email with the agreement details has been sent to <span className="font-medium text-foreground">{userEmail}</span>.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

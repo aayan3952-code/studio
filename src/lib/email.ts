@@ -1,3 +1,4 @@
+
 'use server';
 
 import nodemailer from 'nodemailer';
@@ -19,7 +20,7 @@ const smtpConfig = {
 const senderEmail = process.env.SENDER_EMAIL;
 const adminEmail = process.env.ADMIN_EMAIL;
 
-export async function sendContractEmail(agreement: FormValues & {id: string, submittedAt: string}, pdfAttachment: Buffer) {
+export async function sendContractEmail(agreement: FormValues & {id: string, submittedAt: string}) {
     if (!process.env.SENDGRID_API_KEY) {
         console.error('SENDGRID_API_KEY is not set. Skipping email.');
         return;
@@ -39,13 +40,7 @@ export async function sendContractEmail(agreement: FormValues & {id: string, sub
         cc: adminEmail,
         subject: `Your Trucking Service Agreement is Confirmed (ID: ${agreement.id})`,
         html: emailHtml,
-        attachments: [
-            {
-                filename: `Service-Agreement-${agreement.id}.pdf`,
-                content: pdfAttachment,
-                contentType: 'application/pdf',
-            },
-        ],
+        // attachments removed
     };
 
     try {
