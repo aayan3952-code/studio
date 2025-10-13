@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -24,9 +25,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@react-email/render', 'nodemailer'],
-  },
+  serverExternalPackages: ['@react-email/render', 'nodemailer'],
 };
 
 export default nextConfig;

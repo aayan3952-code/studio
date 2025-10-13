@@ -2,11 +2,10 @@
 'use server';
 
 import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
-import { firestore } from './firebase';
-import { serviceAgreementSchema, type FormValues } from './schemas';
+import { firestore, auth } from '@/lib/firebase';
+import { serviceAgreementSchema, type FormValues } from '@/lib/schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase';
-import { sendContractEmail } from './email';
+import { sendContractEmail } from '@/lib/email';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -27,26 +26,34 @@ export async function saveAgreement(data: FormValues) {
     };
     
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
-
-    // CRITICAL FIX: Convert Date object to string BEFORE sending to the email component.
-    const fullAgreementDataForEmail = {
-        ...agreementData,
-        id: docRef.id,
-        date: agreementData.date.toISOString(), // This is the fix.
-        submittedAt: new Date().toISOString(),
-        status: 'Submitted'
-    };
     
-    await sendContractEmail(fullAgreementDataForEmail);
-    
+    // Email sending is now removed from the initial submission.
     return { success: true, docId: docRef.id };
   } catch (error: any) {
-    console.error("Error during agreement processing: ", error);
-    // Ensure any caught error is returned as a plain string.
-    const errorMessage = `Failed to process agreement: ${error.message || String(error)}`;
+    console.error("Error during agreement save: ", error);
+    const errorMessage = `Failed to save agreement: ${error.message || String(error)}`;
     return { success: false, error: errorMessage };
   }
 }
+
+export async function sendConfirmationEmail(agreementId: string) {
+    try {
+        const agreementDataResult = await getAgreement(agreementId);
+        if (!agreementDataResult.success || !agreementDataResult.data) {
+            throw new Error('Agreement not found.');
+        }
+
+        // The getAgreement function already returns serializable data.
+        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; status: string };
+
+        await sendContractEmail(agreementData);
+        return { success: true };
+    } catch (error: any) {
+        console.error("Error sending confirmation email: ", error);
+        return { success: false, error: error.message };
+    }
+}
+
 
 export async function getAgreement(id: string) {
   try {
@@ -62,7 +69,7 @@ export async function getAgreement(id: string) {
           id: docSnap.id,
           // Convert Firestore Timestamps to serializable strings
           date: data.date.toDate().toISOString(),
-          submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : null,
+          submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString(),
         }
       };
     } else {
