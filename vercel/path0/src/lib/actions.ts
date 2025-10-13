@@ -2,11 +2,10 @@
 'use server';
 
 import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc, deleteDoc } from 'firebase/firestore';
-import { firestore } from './firebase';
-import { serviceAgreementSchema, type FormValues } from './schemas';
+import { firestore, auth } from '@/lib/firebase';
+import { serviceAgreementSchema, type FormValues } from '@/lib/schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase';
-import { sendContractEmail } from './email';
+import { sendContractEmail } from '@/lib/email';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -45,7 +44,7 @@ export async function sendConfirmationEmail(agreementId: string) {
         }
 
         // The getAgreement function already returns serializable data.
-        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; };
+        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; status: string };
 
         await sendContractEmail(agreementData);
         return { success: true };
