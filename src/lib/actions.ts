@@ -11,11 +11,8 @@ export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
 
   if (!parsedData.success) {
-    let errorMessages = 'Validation failed: ';
-    parsedData.error.issues.forEach((issue) => {
-      errorMessages += `${issue.path.join('.')}: ${issue.message}. `;
-    });
-    return { success: false, error: errorMessages };
+    const errorMessages = parsedData.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ');
+    return { success: false, error: `Validation failed: ${errorMessages}` };
   }
 
   try {
@@ -27,7 +24,6 @@ export async function saveAgreement(data: FormValues) {
     
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
     
-    // Email sending is now removed from the initial submission.
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement save: ", error);
@@ -42,8 +38,8 @@ export async function sendConfirmationEmail(agreementId: string) {
         if (!agreementDataResult.success || !agreementDataResult.data) {
             throw new Error('Agreement not found.');
         }
-
-        // The getAgreement function now returns serializable, pre-formatted data.
+        
+        // The type assertion is safe because we checked for success.
         const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; date: string; status: string; };
 
         await sendContractEmail(agreementData);
@@ -67,9 +63,9 @@ export async function getAgreement(id: string) {
         data: {
           ...data,
           id: docSnap.id,
-          // Convert Firestore Timestamps to human-readable, serializable strings
-          date: data.date.toDate().toLocaleDateString(),
-          submittedAt: data.submittedAt ? data.submittedAt.toDate().toLocaleString() : new Date().toLocaleString(),
+          // Convert Firestore Timestamps to ISO strings for serialization
+          date: data.date.toDate().toISOString(),
+          submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString(),
         }
       };
     } else {
