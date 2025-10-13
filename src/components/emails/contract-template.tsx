@@ -63,7 +63,8 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
         { label: 'Insurance Assistance', value: agreement.insuranceAssistance },
     ].filter(service => service.value);
 
-    // The dates are now ISO strings from the server action, so we parse them here.
+    // The dates are now guaranteed to be strings from the server action.
+    // We create Date objects here *only* for formatting purposes.
     const formattedAgreementDate = new Date(agreement.date).toLocaleDateString();
     const formattedSubmissionDate = new Date(agreement.submittedAt).toLocaleString();
 

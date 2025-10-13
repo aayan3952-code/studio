@@ -18,6 +18,7 @@ export async function saveAgreement(data: FormValues) {
   try {
     const agreementData = {
         ...parsedData.data,
+        date: parsedData.data.date.toISOString(), // Convert Date object to string BEFORE saving
         status: 'Submitted',
         submittedAt: serverTimestamp(),
     };
@@ -58,14 +59,16 @@ export async function getAgreement(id: string) {
 
     if (docSnap.exists()) {
       const data = docSnap.data();
+      // Firestore Timestamps need to be converted for serialization.
+      // The 'date' field is already a string from our `saveAgreement` fix.
+      const submittedAt = data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString();
+      
       return { 
         success: true, 
         data: {
           ...data,
           id: docSnap.id,
-          // Convert Firestore Timestamps to ISO strings for serialization
-          date: data.date.toDate().toISOString(),
-          submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString(),
+          submittedAt,
         }
       };
     } else {
@@ -85,7 +88,7 @@ export async function getAllAgreements() {
       return {
         ...data,
         id: doc.id,
-        date: data.date.toDate().toISOString(),
+        // date is already a string
         submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : null,
       }
     });
