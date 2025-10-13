@@ -43,8 +43,8 @@ export async function sendConfirmationEmail(agreementId: string) {
             throw new Error('Agreement not found.');
         }
 
-        // The getAgreement function already returns serializable data.
-        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; status: string };
+        // The getAgreement function now returns serializable, pre-formatted data.
+        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; date: string; status: string; };
 
         await sendContractEmail(agreementData);
         return { success: true };
@@ -67,9 +67,9 @@ export async function getAgreement(id: string) {
         data: {
           ...data,
           id: docSnap.id,
-          // Convert Firestore Timestamps to serializable strings
-          date: data.date.toDate().toISOString(),
-          submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString(),
+          // Convert Firestore Timestamps to human-readable, serializable strings
+          date: data.date.toDate().toLocaleDateString(),
+          submittedAt: data.submittedAt ? data.submittedAt.toDate().toLocaleString() : new Date().toLocaleString(),
         }
       };
     } else {

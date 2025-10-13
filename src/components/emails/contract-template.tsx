@@ -3,7 +3,7 @@ import React from 'react';
 import { type FormValues } from '@/lib/schemas';
 
 interface ContractEmailProps {
-  agreement: FormValues & { id: string; submittedAt: string };
+  agreement: FormValues & { id: string; submittedAt: string; date: string; status: string; };
 }
 
 const containerStyle: React.CSSProperties = {
@@ -63,9 +63,9 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
         { label: 'Insurance Assistance', value: agreement.insuranceAssistance },
     ].filter(service => service.value);
 
-    // Ensure all date values are strings before rendering
-    const formattedSubmissionDate = new Date(agreement.submittedAt).toLocaleString();
-    const formattedAgreementDate = new Date(agreement.date).toLocaleDateString();
+    // The dates are now pre-formatted strings. No need to use new Date().
+    const formattedAgreementDate = agreement.date;
+    const formattedSubmissionDate = agreement.submittedAt;
 
     return (
         <div style={containerStyle}>

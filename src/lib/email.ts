@@ -20,14 +20,14 @@ const smtpConfig = {
 const senderEmail = process.env.SENDER_EMAIL;
 const adminEmail = process.env.ADMIN_EMAIL;
 
-export async function sendContractEmail(agreement: FormValues & {id: string, submittedAt: string}) {
+export async function sendContractEmail(agreement: FormValues & {id: string, submittedAt: string, date: string, status: string}) {
     if (!process.env.SENDGRID_API_KEY) {
         console.error('SENDGRID_API_KEY is not set. Skipping email.');
-        return;
+        throw new Error('Email service is not configured. Could not send email.');
     }
      if (!senderEmail || !adminEmail) {
         console.error('SENDER_EMAIL or ADMIN_EMAIL is not set. Skipping email.');
-        return;
+        throw new Error('Email sender or admin address is not configured. Could not send email.');
     }
 
     const transporter = nodemailer.createTransport(smtpConfig);
@@ -40,7 +40,6 @@ export async function sendContractEmail(agreement: FormValues & {id: string, sub
         cc: adminEmail,
         subject: `Your Trucking Service Agreement is Confirmed (ID: ${agreement.id})`,
         html: emailHtml,
-        // attachments removed
     };
 
     try {
