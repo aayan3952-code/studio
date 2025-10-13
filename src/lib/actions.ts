@@ -28,10 +28,11 @@ export async function saveAgreement(data: FormValues) {
     
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
 
+    // CRITICAL FIX: Convert Date object to string BEFORE sending to the email component.
     const fullAgreementDataForEmail = {
         ...agreementData,
         id: docRef.id,
-        date: agreementData.date.toISOString(),
+        date: agreementData.date.toISOString(), // This is the fix.
         submittedAt: new Date().toISOString(),
         status: 'Submitted'
     };
@@ -41,7 +42,8 @@ export async function saveAgreement(data: FormValues) {
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement processing: ", error);
-    const errorMessage = `Failed to process agreement: ${JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}`;
+    // Ensure any caught error is returned as a plain string.
+    const errorMessage = `Failed to process agreement: ${error.message || String(error)}`;
     return { success: false, error: errorMessage };
   }
 }
