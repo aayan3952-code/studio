@@ -36,14 +36,11 @@ export async function saveAgreement(data: FormValues) {
         status: 'Submitted'
     };
     
-    // The PDF generation is removed as it's causing server errors.
-    // We will just send the email with the HTML body.
     await sendContractEmail(fullAgreementDataForEmail);
     
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement processing: ", error);
-    // Ensure the error is always a string, even if it's a complex object.
     const errorMessage = `Failed to process agreement: ${JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}`;
     return { success: false, error: errorMessage };
   }

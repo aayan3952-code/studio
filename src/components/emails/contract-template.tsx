@@ -54,7 +54,6 @@ const footerStyle: React.CSSProperties = {
     color: '#888',
 };
 
-
 export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement }) => {
     const services = [
         { label: 'Dedicated Lane Setup', value: agreement.dedicatedLaneSetup },
@@ -64,22 +63,25 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
         { label: 'Insurance Assistance', value: agreement.insuranceAssistance },
     ].filter(service => service.value);
 
+    // Ensure all date values are strings before rendering
+    const formattedSubmissionDate = new Date(agreement.submittedAt).toLocaleString();
+    const formattedAgreementDate = new Date(agreement.date).toLocaleDateString();
+
     return (
         <div style={containerStyle}>
             <div style={headerStyle}>
                 {/* To add a logo here, you must use an absolute URL to a publicly hosted image. */}
-                {/* Example: <img src="https://your-app-domain.com/logo.png" alt="Company Logo" /> */}
                 <h1>Trucking Service Agreement</h1>
                 <p>Confirmation & Record</p>
             </div>
 
             <div style={sectionStyle}>
-                <p>Thank you for your submission. This email confirms the details of the service agreement entered into on {new Date(agreement.date).toLocaleDateString()}.</p>
+                <p>Thank you for your submission. This email confirms the details of the service agreement entered into on {formattedAgreementDate}.</p>
                 <div style={detailItemStyle}>
                     <span style={detailLabelStyle}>Tracking ID: </span> {agreement.id}
                 </div>
                  <div style={detailItemStyle}>
-                    <span style={detailLabelStyle}>Submission Date: </span> {new Date(agreement.submittedAt).toLocaleString()}
+                    <span style={detailLabelStyle}>Submission Date: </span> {formattedSubmissionDate}
                 </div>
                  <div style={detailItemStyle}>
                     <span style={detailLabelStyle}>Status: </span> {agreement.status}
@@ -126,9 +128,8 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
 
             <div style={sectionStyle}>
                 <h2 style={sectionTitleStyle}>Signature</h2>
-                <div style={detailItemStyle}><span style={detailLabelStyle}>Signed By (Printed Name):</span> {agreement.signature}</div>
-                <div style={detailItemStyle}><span style={detailLabelStyle}>Printed Name:</span> {agreement.printName}</div>
-                <div style={detailItemStyle}><span style={detailLabelStyle}>Date Signed:</span> {new Date(agreement.date).toLocaleDateString()}</div>
+                <div style={detailItemStyle}><span style={detailLabelStyle}>Signed By (Printed Name):</span> {agreement.printName}</div>
+                <div style={detailItemStyle}><span style={detailLabelStyle}>Date Signed:</span> {formattedAgreementDate}</div>
             </div>
 
             <div style={footerStyle}>
