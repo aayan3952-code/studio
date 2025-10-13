@@ -137,3 +137,4 @@ export const ContractEmailTemplate: React.FC<ContractEmailProps> = ({ agreement 
             </div>
         </div>
     );
+};
