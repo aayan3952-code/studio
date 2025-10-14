@@ -54,7 +54,7 @@ const initialValues: FormValues = {
 
 export function TruckingForm({ onStepChange }: TruckingFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [submissionData, setSubmissionData] = useState<{trackingId: string, userEmail: string, userName: string} | null>(null);
+  const [submissionData, setSubmissionData] = useState<{trackingId: string} | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { toast } = useToast();
 
@@ -80,8 +80,6 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
     if (result.success && result.docId) {
       setSubmissionData({
         trackingId: result.docId,
-        userEmail: data.email,
-        userName: data.carrierFullName,
       });
     } else {
       let errorMessage = 'An unknown error occurred.';
@@ -128,8 +126,6 @@ export function TruckingForm({ onStepChange }: TruckingFormProps) {
     return <SuccessScreen 
       onReset={handleReset} 
       trackingId={submissionData.trackingId}
-      userEmail={submissionData.userEmail}
-      userName={submissionData.userName}
     />;
   }
 

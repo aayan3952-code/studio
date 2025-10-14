@@ -5,7 +5,6 @@ import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc, d
 import { firestore, auth } from '@/lib/firebase';
 import { serviceAgreementSchema, type FormValues } from '@/lib/schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { sendContractEmail } from '@/lib/email';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -18,7 +17,7 @@ export async function saveAgreement(data: FormValues) {
   try {
     const agreementData = {
         ...parsedData.data,
-        date: parsedData.data.date.toISOString(), // Convert Date object to string BEFORE saving
+        date: parsedData.data.date.toISOString(), // Convert Date object to string
         status: 'Submitted',
         submittedAt: serverTimestamp(),
     };
@@ -33,25 +32,6 @@ export async function saveAgreement(data: FormValues) {
   }
 }
 
-export async function sendConfirmationEmail(agreementId: string) {
-    try {
-        const agreementDataResult = await getAgreement(agreementId);
-        if (!agreementDataResult.success || !agreementDataResult.data) {
-            throw new Error('Agreement not found.');
-        }
-        
-        // The type assertion is safe because we checked for success.
-        const agreementData = agreementDataResult.data as FormValues & { id: string; submittedAt: string; date: string; status: string; };
-
-        await sendContractEmail(agreementData);
-        return { success: true };
-    } catch (error: any) {
-        console.error("Error sending confirmation email: ", error);
-        return { success: false, error: error.message };
-    }
-}
-
-
 export async function getAgreement(id: string) {
   try {
     const docRef = doc(firestore, 'serviceAgreements', id);
@@ -60,7 +40,6 @@ export async function getAgreement(id: string) {
     if (docSnap.exists()) {
       const data = docSnap.data();
       // Firestore Timestamps need to be converted for serialization.
-      // The 'date' field is already a string from our `saveAgreement` fix.
       const submittedAt = data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString();
       
       return { 
