@@ -5,6 +5,7 @@ import { collection, addDoc, serverTimestamp, doc, getDoc, getDocs, updateDoc, d
 import { firestore, auth } from '@/lib/firebase';
 import { serviceAgreementSchema, type FormValues } from '@/lib/schemas';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendContractEmail } from '@/lib/email';
 
 export async function saveAgreement(data: FormValues) {
   const parsedData = serviceAgreementSchema.safeParse(data);
@@ -17,13 +18,28 @@ export async function saveAgreement(data: FormValues) {
   try {
     const agreementData = {
         ...parsedData.data,
-        date: parsedData.data.date.toISOString(), // Convert Date object to string
+        date: parsedData.data.date.toISOString(),
         status: 'Submitted',
         submittedAt: serverTimestamp(),
     };
     
     const docRef = await addDoc(collection(firestore, 'serviceAgreements'), agreementData);
     
+    // Automatically send email on successful submission
+    try {
+      const fullAgreementDataForEmail = {
+          ...parsedData.data,
+          id: docRef.id,
+          date: parsedData.data.date.toISOString(),
+          submittedAt: new Date().toISOString(), // Use current time as submission time for email
+      };
+      await sendContractEmail(fullAgreementDataForEmail);
+    } catch (emailError: any) {
+      // Log the email error but don't block the user.
+      // The submission was successful, only the email failed.
+      console.error('Submission successful, but confirmation email failed to send:', emailError);
+    }
+
     return { success: true, docId: docRef.id };
   } catch (error: any) {
     console.error("Error during agreement save: ", error);
@@ -39,15 +55,14 @@ export async function getAgreement(id: string) {
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // Firestore Timestamps need to be converted for serialization.
-      const submittedAt = data.submittedAt ? data.submittedAt.toDate().toISOString() : new Date().toISOString();
       
       return { 
         success: true, 
         data: {
           ...data,
           id: docSnap.id,
-          submittedAt,
+          submittedAt: data.submittedAt ? data.submittedAt.toDate().toLocaleString() : new Date().toLocaleString(),
+          date: new Date(data.date).toLocaleDateString(),
         }
       };
     } else {
@@ -67,7 +82,6 @@ export async function getAllAgreements() {
       return {
         ...data,
         id: doc.id,
-        // date is already a string
         submittedAt: data.submittedAt ? data.submittedAt.toDate().toISOString() : null,
       }
     });
