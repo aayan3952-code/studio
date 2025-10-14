@@ -1,13 +1,11 @@
 
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ArrowRight, Send, Loader2 } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { sendConfirmationEmail } from '@/lib/actions';
 
 type SuccessScreenProps = {
   onReset: () => void;
@@ -15,7 +13,6 @@ type SuccessScreenProps = {
 };
 
 export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
-  const [isSending, setIsSending] = useState(false);
   const trackingUrl = `/track?id=${trackingId}`;
   const { toast } = useToast();
 
@@ -27,32 +24,13 @@ export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
     });
   };
 
-  const handleSendEmail = async () => {
-    setIsSending(true);
-    const result = await sendConfirmationEmail(trackingId);
-    setIsSending(false);
-
-    if (result.success) {
-      toast({
-        title: 'Email Sent!',
-        description: `A copy of the agreement has been sent to your email.`,
-      });
-    } else {
-      toast({
-        title: 'Email Failed',
-        description: result.error || 'Could not send the confirmation email.',
-        variant: 'destructive',
-      });
-    }
-  };
-
   return (
     <Card className="w-full max-w-2xl mx-auto animate-in fade-in-50 duration-500">
       <CardHeader className="items-center text-center">
         <CheckCircle2 className="h-16 w-16 text-green-500" />
         <CardTitle className="text-3xl font-headline mt-4">Submission Successful!</CardTitle>
         <CardDescription className="mt-2 text-lg">
-          Your service agreement has been submitted.
+          Your service agreement has been submitted. A confirmation has been sent to your email.
         </CardDescription>
       </CardHeader>
       <CardContent className="text-center">
@@ -77,17 +55,6 @@ export function SuccessScreen({ onReset, trackingId }: SuccessScreenProps) {
               </Link>
             </Button>
         </div>
-
-        <div className="mt-6 border-t pt-6">
-            <Button onClick={handleSendEmail} disabled={isSending} className="w-full max-w-sm mx-auto">
-                {isSending ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...</>
-                ) : (
-                    <><Send className="mr-2 h-4 w-4" /> Send Copy of Contract to My Mail</>
-                )}
-            </Button>
-        </div>
-
       </CardContent>
     </Card>
   );
