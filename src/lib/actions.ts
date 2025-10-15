@@ -30,8 +30,7 @@ export async function saveAgreement(data: FormValues) {
       const fullAgreementDataForEmail = {
           ...parsedData.data,
           id: docRef.id,
-          date: parsedData.data.date.toISOString(),
-          submittedAt: new Date().toISOString(), // Use current time as submission time for email
+          submittedAt: new Date().toISOString(),
       };
       await sendContractEmail(fullAgreementDataForEmail);
     } catch (emailError: any) {
